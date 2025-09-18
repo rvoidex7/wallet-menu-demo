@@ -1,50 +1,142 @@
-# Welcome to your Expo app 👋
+# Wallet Menu Component
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Bu proje, React Native & Web için geliştirilmiş, sürüklenebilir ve animasyonlu bir alt menü (bottom sheet) component'idir. Hem mobil uygulamalarda hem de web sitelerinde sorunsuz çalışacak şekilde tasarlanmıştır.
 
-## Get started
+[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen?style=for-the-badge&logo=vercel)](https://wallet-menu-demo-z99y.vercel.app/)
 
-1. Install dependencies
+## Hızlı Bakış
 
-   ```bash
-   npm install
-   ```
+![Wallet Menu Demo GIF](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNTFmMzVjMDI2YmMzZDIyYjQ4ZDYxYzg5ZGE5Y2EwYjliNTM2Y2QyZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/L2DD4aE5w4aY085nLq/giphy.gif)
 
-2. Start the app
+*Not: Yukarıdaki GIF, component'in temel işlevselliğini göstermektedir.*
 
-   ```bash
-   npx expo start
-   ```
+## 🚀 Temel Özellikler
 
-In the output, you'll find options to open the app in a
+- **Platform Bağımsız:** Hem iOS ve Android (React Native) hem de Web üzerinde çalışır.
+- **Akıcı Animasyonlar:** `react-native-reanimated` ve `react-native-gesture-handler` kullanılarak 60 FPS'de çalışan akıcı açılıp kapanma ve genişleme animasyonları.
+- **İnteraktif Jestler:** Menü, hem başlık (header) hem de içerik (content) alanından sürüklenerek kontrol edilebilir.
+- **Yatay Kaydırma Desteği:** Menü içindeki kart listesi gibi yatay `ScrollView`'lar, dikey menü jestleriyle çakışmadan sorunsuz çalışır.
+- **Dinamik Veri:** Menü içeriği, dışarıdan gönderilen bir `data` prop'u ile kolayca özelleştirilebilir.
+- **Statik Dağıtım Uyumlu:** Vercel gibi statik site barındırma servislerinde doğru çalışması için "runtime"da boyut hesaplama mantığı içerir.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## 🛠️ Kullanılan Teknolojiler
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- [React](https://reactjs.org/) & [React Native](https://reactnative.dev/)
+- [Expo](https://expo.dev/) (Expo Router dahil)
+- [React Native Gesture Handler](https://docs.swmansion.com/react-native-gesture-handler/)
+- [React Native Reanimated](https://docs.swmansion.com/react-native-reanimated/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Vercel](https://vercel.com/) (Dağıtım için)
 
-## Get a fresh project
+## 🔧 Component Nasıl Kullanılır?
 
-When you're ready, run:
+Bu component'i kendi projenize entegre etmek için aşağıdaki adımları izleyin.
+
+### Adım 1: Component Dosyalarını Kopyalayın
+
+`src/components/WalletMenu` klasörünü kendi projenizin `components` klasörüne kopyalayın.
+
+### Adım 2: Gerekli Paketleri Yükleyin
+
+Component'in çalışması için projenizde aşağıdaki paketlerin yüklü olduğundan emin olun:
 
 ```bash
-npm run reset-project
+npm install @expo/vector-icons react-native-gesture-handler react-native-reanimated react-native-safe-area-context
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### Adım 3: Ekranda Kullanımı
 
-## Learn more
+Component'i kullanacağınız ekranın, jestlerin çalışması için `GestureHandlerRootView` ile sarmalanmış olması kritik öneme sahiptir.
 
-To learn more about developing your project with Expo, look at the following resources:
+Aşağıda temel bir kullanım örneği verilmiştir:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```tsx
+// src/screens/MyScreen.tsx
 
-## Join the community
+import React from 'react';
+import { View, StyleSheet, Text, ImageBackground } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import WalletMenu from '../components/WalletMenu'; // Kopyaladığınız component'in yolu
 
-Join our community of developers creating universal apps.
+// --- Menüye gönderilecek veri ---
+const loyaltyCardsData = [
+  { id: 1, name: 'Fambook Coffee & More', loyalty: { stamps: 3, maxStamps: 8 } },
+  { id: 2, name: 'Paper Roasting Coffee', loyalty: { stamps: 7, maxStamps: 10 } },
+  { id: 3, name: 'Kronotrop', loyalty: { stamps: 5, maxStamps: 9 } },
+];
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+export default function MyScreen() {
+  return (
+    // 1. Jestlerin çalışması için en dış katmanı sarmalayın
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <ImageBackground
+        source={{ uri: 'https://.../background.jpg' }}
+        style={styles.container}
+      >
+        <SafeAreaView style={{ flex: 1 }}>
+            <View style={styles.infoContainer}>
+                <Text style={styles.infoText}>Wallet Menu Demo</Text>
+            </View>
+        </SafeAreaView>
+
+        {/* 2. Component'i çağırın ve veriyi 'data' prop'u ile gönderin */}
+        <WalletMenu data={loyaltyCardsData} />
+        
+      </ImageBackground>
+    </GestureHandlerRootView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { 
+    flex: 1, 
+  },
+  // ... diğer stilleriniz
+});
+
+```
+
+## props API
+
+### `data`
+
+Menü içindeki sadakat kartlarını render etmek için kullanılan veri dizisi.
+
+- **Tip:** `LoyaltyCardData[]`
+- **Gerekli:** Evet
+
+`LoyaltyCardData` objesinin yapısı şu şekilde olmalıdır:
+
+```typescript
+type LoyaltyCardData = {
+  id: number | string;
+  name: string;
+  loyalty: {
+    stamps: number;
+    maxStamps: number;
+  };
+};
+```
+
+## 📦 Demo Projesini Yerel Olarak Çalıştırma
+
+Bu demo repoyu klonlayıp yerel makinenizde çalıştırmak için:
+
+```bash
+# 1. Repoyu klonlayın
+git clone https://github.com/rvoidex7/wallet-menu-demo.git
+
+# 2. Proje dizinine gidin
+cd wallet-menu-demo
+
+# 3. Paketleri yükleyin
+npm install
+
+# 4. Geliştirme sunucusunu başlatın (Web için)
+npm run web
+```
+
+## 🌐 Dağıtım (Deployment)
+
+Bu proje, Expo for Web uygulamalarını Vercel'de dağıtmak için yapılandırılmıştır. `vercel.json` dosyası ve `package.json` içindeki `build` script'i, statik site çıktısı (`dist` klasörü) oluşturarak dağıtımı otomatikleştirir.
