@@ -3,7 +3,9 @@
 [![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen?style=for-the-badge&logo=vercel)](https://wallet-menu-demo-z99y.vercel.app/)
 
 
-![Kayıt wallet2](https://github.com/user-attachments/assets/e928391a-fd86-41a7-9997-82dc6c0a43f5)
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/e928391a-fd86-41a7-9997-82dc6c0a43f5" alt="Wallet Menu Demo" width="300"/>
+</p>
 
 
 <br />
