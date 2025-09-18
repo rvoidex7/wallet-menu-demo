@@ -2,7 +2,9 @@
 
 [![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen?style=for-the-badge&logo=vercel)](https://wallet-menu-demo-z99y.vercel.app/)
 
-<!-- GIF will be placed here -->
+
+![wallet menu2](https://github.com/user-attachments/assets/4a4c3c07-5179-452a-9c4d-063007ca4133)
+
 
 <br />
 
