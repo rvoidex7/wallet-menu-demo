@@ -1,15 +1,14 @@
 import { Ionicons } from '@expo/vector-icons';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 // ScrollView'ı tekrar react-native'den alıyoruz.
 import { Animated, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // --- Dimensions and Constants ---
-const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get('window');
+// Bu sabitler artık component içinde dinamik olarak hesaplanacak
 const SHEET_MIN_HEIGHT = 80;
 const CLOSED_SHEET_WIDTH = 256;
-const OPEN_SHEET_WIDTH = SCREEN_WIDTH > 420 ? 380 : SCREEN_WIDTH - 40;
 const CLOSED_POSITION = 0;
 
 // --- Component Props Type ---
@@ -29,9 +28,36 @@ type WalletMenuProps = {
 // --- WalletMenu Component ---
 export default function WalletMenu({ data }: WalletMenuProps) {
   const insets = useSafeAreaInsets();
+  const [dimensions, setDimensions] = useState({ 
+    width: Dimensions.get('window').width, 
+    height: Dimensions.get('window').height 
+  });
+
+  useEffect(() => {
+    const updateDimensions = () => {
+      setDimensions({
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height,
+      });
+    };
+    // Component yüklendiğinde ve pencere yeniden boyutlandırıldığında boyutları güncelle
+    const subscription = Dimensions.addEventListener('change', updateDimensions);
+    updateDimensions(); // İlk render için de çağır
+    return () => subscription.remove();
+  }, []);
+
+  const SCREEN_HEIGHT = dimensions.height;
+  const SCREEN_WIDTH = dimensions.width;
+  const OPEN_SHEET_WIDTH = SCREEN_WIDTH > 420 ? 380 : SCREEN_WIDTH - 40;
   
   const contentPanRef = useRef<PanGestureHandler>(null);
   const scrollRef = useRef<ScrollView>(null);
+
+  // Vercel'de ilk renderda SCREEN_HEIGHT 0 olabilir.
+  // Boyutlar henüz hesaplanmadıysa hiçbir şey render etme.
+  if (SCREEN_HEIGHT === 0) {
+    return null;
+  }
 
   const SHEET_MAX_HEIGHT = SCREEN_HEIGHT * 0.7;
   const OPEN_POSITION = -SHEET_MAX_HEIGHT + SHEET_MIN_HEIGHT;
@@ -152,7 +178,6 @@ export default function WalletMenu({ data }: WalletMenuProps) {
                       horizontal 
                       showsHorizontalScrollIndicator={false} 
                       style={styles.loyaltyCardsContainer}
-                      simultaneousHandlers={contentPanRef}
                   >
                       {data.map(shop => (
                           <TouchableOpacity key={shop.id} style={[styles.loyaltyCard, {width: CLOSED_SHEET_WIDTH - 32}]}>
